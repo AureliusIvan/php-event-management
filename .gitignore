@@ -1,0 +1,12 @@
+# IDE
+.idea
+
+# environment
+.env
+
+#
+vendor
+
+
+# lock file
+composer.lock

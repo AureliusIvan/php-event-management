@@ -1,0 +1,9 @@
+# Prevent direct access to source files
+<FilesMatch "\.(php|ini|log|sh|inc)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Redirect all requests to index.php for clean URLs (optional)
+RewriteEngine On
+RewriteRule ^$ public/index.php [L]

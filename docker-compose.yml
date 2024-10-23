@@ -1,0 +1,35 @@
+services:
+  php-apache:
+    image: php:8.2-apache
+    container_name: php-app
+    ports:
+      - "8000:80"
+    volumes:
+      - ./public:/var/www/html
+      - ./src:/var/www/src
+      - ./config:/var/www/config
+      - ./vendor:/var/www/vendor
+      - ./storage:/var/www/storage
+      - ./logs:/var/www/logs
+    environment:
+      - DB_HOST=mariadb
+      - DB_NAME=my_database
+      - DB_USER=root
+      - DB_PASS=secret
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb:10.11
+    container_name: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: my_database
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+volumes:
+  mariadb_data:
