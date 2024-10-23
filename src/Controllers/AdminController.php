@@ -97,5 +97,3 @@ class AdminController
         }
     }
 }
-
-ob_end_flush();

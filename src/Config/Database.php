@@ -2,15 +2,15 @@
 
 namespace App\Config;
 
-use Dotenv;
+use Dotenv\Dotenv;
 use PDO;
 use PDOException;
 
 class Database
 {
     // Hold the class instance.
-    private static $instance = null;
-    private $pdo;
+    private static ?Database $instance = null;
+    private PDO $pdo;
 
     // Database credentials
     private $host;
@@ -24,15 +24,17 @@ class Database
     {
         // Load environment variables if not already loaded
         if (!isset($_ENV['DB_HOST'])) {
-            $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+            $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
             $dotenv->load();
         }
 
         // Set database credentials from environment variables
-        $this->host = $_ENV['DB_HOST'];
-        $this->dbname = $_ENV['DB_NAME'];
-        $this->user = $_ENV['DB_USER'];
-        $this->pass = $_ENV['DB_PASS'];
+
+        // Use getenv() instead of $_ENV
+        $this->host = getenv('DB_HOST');
+        $this->dbname = getenv('DB_NAME');
+        $this->user = getenv('DB_USER');
+        $this->pass = getenv('DB_PASS');
         $this->charset = 'utf8mb4';
 
         // Create a DSN string for the PDO connection
@@ -51,13 +53,14 @@ class Database
         } catch (PDOException $e) {
             // Handle connection error
             // throw the error
-
+            echo $e->getMessage();
+            echo '<br>';
             die('Database connection failed: ' . $e->getMessage());
         }
     }
 
     // The singleton method to get the instance of the database
-    public static function getInstance()
+    public static function getInstance(): ?Database
     {
         if (self::$instance === null) {
             self::$instance = new Database();
